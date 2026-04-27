@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+
+:root {
+    --primary-color: #D62828;
+    --secondary-color: #F4B400;
+    --accent-color: #2E7D32;
+    --bg-color: #fdfdfd;
+    --text-color: #1F2937;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', system-ui, -apple-system, 'Google Sans', sans-serif;
+}
+
+.bg-primary {
+    background-color: var(--primary-color);
+}
+
+.text-primary {
+    color: var(--primary-color);
+}
+
+.border-primary {
+    border-color: var(--primary-color);
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color);
+}
+
+.text-secondary {
+    color: var(--secondary-color);
+}
+
+.bg-accent {
+    background-color: var(--accent-color);
+}
+
+.text-accent {
+    color: var(--accent-color);
+}
+
+.hover\:bg-primary-dark:hover {
+    background-color: #b71c1c;
+}
+
+.hover\:text-primary:hover {
+    color: var(--primary-color);
+}
+
+.focus\:ring-primary:focus {
+    ring-color: var(--primary-color);
+}
+
+/* Smooth transitions */
+.transition-smooth {
+    transition: all 0.2s ease;
+}
+
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
