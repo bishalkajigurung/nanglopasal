@@ -34,15 +34,7 @@
 
             <!-- Login Button and Cart Icon (responsive) -->
             <div class="flex items-center gap-3">
-                <a href="{{ route('login') }}"
-                    class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-white transition shadow-sm hover:shadow-md"
-                    style="background-color: var(--primary-color);">
-                    <i class="fas fa-user-alt text-sm"></i> Sign In
-                </a>
-                <!-- Mobile friendly cart & menu icon -->
-                <button class="sm:hidden p-2 rounded-full hover:bg-gray-100 transition">
-                    <i class="fas fa-user text-xl" style(--primary-color);"></i>
-                </button>
+                @if (Auth::guard('web')->user())
                 <div class="relative">
                     <button class="p-2 rounded-full hover:bg-gray-100 transition relative">
                         <i class="fas fa-shopping-bag text-xl" style="color: var(--text-color);"></i>
@@ -51,6 +43,20 @@
                             style="background-color: var(--primary-color);">2</span>
                     </button>
                 </div>
+
+                @else
+                <a href="{{ route('login') }}"
+                    class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-white transition shadow-sm hover:shadow-md"
+                    style="background-color: var(--primary-color);">
+                    <i class="fas fa-user-alt text-sm"></i> Sign In
+                </a>
+
+                @endif
+
+                <!-- Mobile friendly cart & menu icon -->
+                <button class="sm:hidden p-2 rounded-full hover:bg-gray-100 transition">
+                    <i class="fas fa-user text-xl" style(--primary-color);"></i>
+                </button>
                 <!-- Mobile menu button -->
                 <button class="md:hidden p-2 rounded-full hover:bg-gray-100 transition">
                     <i class="fas fa-bars text-xl text-gray-700"></i>

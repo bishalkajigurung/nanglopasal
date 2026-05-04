@@ -16,6 +16,10 @@ Route::get("/products", [PageController::class, "products"])->name('products');
 
 Route::get("/login", [AuthController::class, "login"])->name('login');
 
+Route::get("/google/callback", [AuthController::class, "callback"]);
+
+Route::get('/google/redirect', [AuthController::class, 'redirect'])->name('google.redirect');
+
 //Route::get('/test-mail', function () {
 //    Mail::to("bishalkajigurung@gmail.com")->send(new SellerApprovalMail());
 //    return "email sent successfully";

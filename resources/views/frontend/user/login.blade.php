@@ -32,9 +32,8 @@
                     </div>
 
                     <!-- Google Login Button (Only Option) -->
-                    <form action="" method="GET" class="space-y-6">
-                        @csrf
-                        <button type="submit"
+                    <div class="space-y-6">
+                        <a href="{{ route('google.redirect') }}"
                             class="w-full flex items-center justify-center gap-3 px-6 py-3.5 border border-gray-300 rounded-xl shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                             <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -51,8 +50,8 @@
                                     fill="#EA4335" />
                             </svg>
                             <span class="font-medium">Continue with Google</span>
-                        </button>
-                    </form>
+                        </a>
+                    </div>
 
                     <!-- Divider -->
                     <div class="relative my-8">
