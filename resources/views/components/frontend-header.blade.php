@@ -34,11 +34,11 @@
 
             <!-- Login Button and Cart Icon (responsive) -->
             <div class="flex items-center gap-3">
-                <button
+                <a href="{{ route('login') }}"
                     class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-white transition shadow-sm hover:shadow-md"
                     style="background-color: var(--primary-color);">
                     <i class="fas fa-user-alt text-sm"></i> Sign In
-                </button>
+                </a>
                 <!-- Mobile friendly cart & menu icon -->
                 <button class="sm:hidden p-2 rounded-full hover:bg-gray-100 transition">
                     <i class="fas fa-user text-xl" style(--primary-color);"></i>
