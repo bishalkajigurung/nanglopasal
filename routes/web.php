@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Frontend\AuthController;
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\SellerController;
 use App\Http\Controllers\ProfileController;
@@ -19,6 +20,8 @@ Route::get("/login", [AuthController::class, "login"])->name('login');
 Route::get("/google/callback", [AuthController::class, "callback"]);
 
 Route::get('/google/redirect', [AuthController::class, 'redirect'])->name('google.redirect');
+ 
+
 
 //Route::get('/test-mail', function () {
 //    Mail::to("bishalkajigurung@gmail.com")->send(new SellerApprovalMail());
@@ -37,6 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/cart/store', [CartController::class, 'store'])->name('cart.store');
+    Route::get('/carts', [CartController::class, 'index'])->name('carts');
+    Route::delete('/cart/delete/{id}', [CartController::class, 'delete'])->name('cart.destroy');
+    Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 });
 
 require __DIR__.'/auth.php';

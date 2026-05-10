@@ -35,14 +35,14 @@
             <!-- Login Button and Cart Icon (responsive) -->
             <div class="flex items-center gap-3">
                 @if (Auth::guard('web')->user())
-                <div class="relative">
+                <a href="{{ route('carts') }}" class="relative">
                     <button class="p-2 rounded-full hover:bg-gray-100 transition relative">
                         <i class="fas fa-shopping-bag text-xl" style="color: var(--text-color);"></i>
                         <span
                             class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white rounded-full"
-                            style="background-color: var(--primary-color);">2</span>
+                            style="background-color: var(--primary-color);">{{ Auth::guard('web')->user()->carts->count() }}</span>
                     </button>
-                </div>
+                </a>
 
                 @else
                 <a href="{{ route('login') }}"
