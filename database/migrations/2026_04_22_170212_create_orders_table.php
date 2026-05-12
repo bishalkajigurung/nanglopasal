@@ -16,6 +16,7 @@ return new class extends Migration
             $table->double('total_amount');
             $table->enum('status', ['pending', 'processing', 'delivered', 'cancelled'])->default('pending');
             $table->string('payment_status')->default('pending');
+            $table->enum('payment_method', ["cod", "khalti"]);
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('seller_id')->constrained('sellers')->cascadeOnDelete();
             $table->timestamps();

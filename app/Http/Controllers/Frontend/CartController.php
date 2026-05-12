@@ -30,8 +30,8 @@ class CartController extends Controller
 
         // Check if item already exists in cart
         $cart = Cart::where('user_id', $user->id)
-                    ->where('product_varient_id', $variant->id)
-                    ->first();
+            ->where('product_varient_id', $variant->id)
+            ->first();
 
         if ($cart) {
             $cart->qty += $request->qty;
@@ -55,8 +55,8 @@ class CartController extends Controller
     public function index()
     {
         $carts = Cart::with(['product', 'productVarient', 'seller'])
-                    ->where('user_id', Auth::guard('web')->user()->id)
-                    ->get();
+            ->where('user_id', Auth::guard('web')->user()->id)
+            ->get();
 
         return view('frontend.carts', compact('carts'));
     }
@@ -64,8 +64,8 @@ class CartController extends Controller
     public function delete($id)
     {
         $cart = Cart::where('user_id', Auth::guard('web')->user()->id)
-                    ->where('id', $id)
-                    ->firstOrFail();
+            ->where('id', $id)
+            ->firstOrFail();
         $cart->delete();
 
         toast('Item removed from cart', 'success');
@@ -73,19 +73,21 @@ class CartController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'qty' => 'required|integer|min:1|max:99'
-    ]);
+    {
+        $request->validate([
+            'qty' => 'required|integer|min:1|max:99'
+        ]);
 
-    $cart = Cart::where('user_id', Auth::guard('web')->user()->id)
-                ->where('id', $id)
-                ->firstOrFail();
+        $cart = Cart::where('user_id', Auth::guard('web')->user()->id)
+            ->where('id', $id)
+            ->firstOrFail();
 
-    $cart->qty = $request->qty;
-    $cart->save();
+        $cart->qty = $request->qty;
+        $cart->save();
 
-    toast('Cart updated successfully', 'success');
-    return redirect()->back();
-}
+        toast('Cart updated successfully', 'success');
+        return redirect()->back();
+    }
+
+    
 }

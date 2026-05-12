@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Frontend\AuthController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\OrderController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\SellerController;
 use App\Http\Controllers\ProfileController;
@@ -20,7 +21,7 @@ Route::get("/login", [AuthController::class, "login"])->name('login');
 Route::get("/google/callback", [AuthController::class, "callback"]);
 
 Route::get('/google/redirect', [AuthController::class, 'redirect'])->name('google.redirect');
- 
+
 
 
 //Route::get('/test-mail', function () {
@@ -45,6 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/carts', [CartController::class, 'index'])->name('carts');
     Route::delete('/cart/delete/{id}', [CartController::class, 'delete'])->name('cart.destroy');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+
+    Route::get('/checkout/{id}', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/store/{id}', [OrderController::class, 'checkoutStore'])
+     ->name('checkout.store');
+
+    Route::get('/khalti/callback/{id}', [OrderController::class, 'khalti_callback'])->name('khalti.callback');
 });
 
 require __DIR__.'/auth.php';
