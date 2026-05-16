@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::guard('web')->user();
+
+        $orders = Order::with(['orderItems.product', 'orderItems.productVarient', 'seller'])
+            ->where("user_id", $user->id)
+            ->latest()
+            ->get();
+
+        return view('frontend.orders', compact('orders'));
+    }
     public function checkout($id)
     {
         $seller = Seller::findOrFail($id);
@@ -23,65 +34,77 @@ class OrderController extends Controller
         return view('frontend.checkout', compact('seller', 'carts'));
     }
 
+    public function cancel($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = "cancelled";
+        $order->save();
+
+        toast('Order cancelled successfully!', 'success');
+        return redirect()->route('orders');
+    }
+
     public function checkoutStore(Request $request, $id)
     {
         $seller = Seller::findOrFail($id);
-    $user = Auth::guard('web')->user();
-    $carts = Cart::where("user_id", $user->id)
-                 ->where("seller_id", $id)
-                 ->get();
+        $user = Auth::guard('web')->user();
+        $carts = Cart::where("user_id", $user->id)
+            ->where("seller_id", $id)
+            ->get();
 
-    $total = $carts->sum(fn($c) => $c->amount * $c->qty);
+        $total = $carts->sum(fn($c) => $c->amount * $c->qty);
 
-    // Update or create delivery address...
-    if (!$user->delivery_address) {
-        $delivery_address = new DeliveryAddress();
-        $delivery_address->user_id = $user->id;
-        $delivery_address->contact = $request->contact;
-        $delivery_address->address_detail = $request->address_detail;
-        $delivery_address->save();
-    } else {
-        $delivery_address = $user->delivery_address;
-        $delivery_address->contact = $request->contact;
-        $delivery_address->address_detail = $request->address_detail;
-        $delivery_address->save();
-    }
+        // Update or create delivery address...
+        if (!$user->delivery_address) {
+            $delivery_address = new DeliveryAddress();
+            $delivery_address->user_id = $user->id;
+            $delivery_address->contact = $request->contact;
+            $delivery_address->address_detail = $request->address_detail;
+            $delivery_address->save();
+        } else {
+            $delivery_address = $user->delivery_address;
+            $delivery_address->contact = $request->contact;
+            $delivery_address->address_detail = $request->address_detail;
+            $delivery_address->save();
+        }
 
-    $order = new Order();
-    $order->user_id = $user->id;
-    $order->seller_id = $seller->id;
-    $order->total_amount = $total;           // ← Changed from 'total'
-    $order->payment_method = $request->payment_method;
-    $order->save();
+        $order = new Order();
+        $order->user_id = $user->id;
+        $order->seller_id = $seller->id;
+        $order->total_amount = $total;           // ← Changed from 'total'
+        $order->payment_method = $request->payment_method;
+        $order->save();
 
-    foreach ($carts as $cart) {
-        $orderItem = new OrderItem();
-        $orderItem->order_id = $order->id;
-        $orderItem->product_id = $cart->product_id;
-        $orderItem->product_varient_id = $cart->product_varient_id;
-        $orderItem->qty = $cart->qty;
-        $orderItem->amount = $cart->amount;
-        $orderItem->save();
+        foreach ($carts as $cart) {
+            $orderItem = new OrderItem();
+            $orderItem->order_id = $order->id;
+            $orderItem->product_id = $cart->product_id;
+            $orderItem->product_varient_id = $cart->product_varient_id;
+            $orderItem->qty = $cart->qty;
+            $orderItem->amount = $cart->amount;
+            $orderItem->save();
 
-        $cart->delete();
-    }
+            $cart->delete();
+        }
 
-            if ($request->payment_method == 'cod') {
-                toast('Order placed successfully!', 'success');
-                return redirect()->route('carts');
-            }
 
-            $response = Http::withHeaders([
-                "Authorization"=> "key ". $seller->khalti_secret_key
-            ])->post("https://dev.khalti.com/api/v2/epayment/initiate/", [
-                "return_url" => route('khalti.callback', $order->id),
-                "website_url" => route('home'),
-                "amount" => $total * 100,
-                "purchase_order_id" => $order->id,
-                "purchase_order_name" => $order->id,
-            ]);
 
-            return redirect($response["payment_url"]);
+        if ($request->payment_method == 'cod') {
+            toast('Order placed successfully!', 'success');
+            return redirect()->route('carts');
+        }
+
+        $response = Http::withHeaders([
+            "Authorization" => "key " . $seller->khalti_secret_key
+        ])->post("https://dev.khalti.com/api/v2/epayment/initiate/", [
+            "return_url" => route('khalti.callback', $order->id),
+            "website_url" => route('home'),
+            "amount" => $total * 100,
+            "purchase_order_id" => $order->id,
+            "purchase_order_name" => $order->id,
+        ]);
+
+        return redirect($response["payment_url"]);
     }
 
     public function khalti_callback(Request $request, $id)
@@ -96,4 +119,14 @@ class OrderController extends Controller
         return redirect()->route('carts');
     }
 
+    public function details($id)
+    {
+        $order = Order::with([
+            'user.delivery_address',     
+            'orderItems.product',
+            'orderItems.productVarient'
+        ])->findOrFail($id);
+
+        return view('order_details', compact('order'));
+    }
 }

@@ -40,10 +40,8 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function deliveryAddresses()
+    public function delivery_address()
     {
-        return $this->hasMany(DeliveryAddress::class);
+        return $this->hasOne(DeliveryAddress::class);
     }
-
 }
-
